@@ -1,3 +1,5 @@
+import sys
+
 #Python game library
 import pygame
 
@@ -20,17 +22,23 @@ def main():
     drawable = pygame.sprite.Group()
     
     asteroids = pygame.sprite.Group()
-    AsteroidField = pygame.sprite.Group()
+    #AsteroidField = pygame.sprite.Group()
+    
+    shots = pygame.sprite.Group()
 
     Player.containers = (updatable, drawable)
-    Asteroids.containers = (asteroids, updatable, drawable)
+    Asteroid.containers = (asteroids, updatable, drawable)
     AsteroidField.containers = (updatable)
+    Shot.containers = (shots, updatable, drawable)
 
 
     x = SCREEN_WIDTH / 2
     y = SCREEN_HEIGHT / 2
+    #how in Sam Hill does this work?
     player = Player(x, y)
-   
+
+    asteroidField = AsteroidField()
+
     dt = 0
     
     #pygame.time.Clock()
@@ -44,6 +52,12 @@ def main():
                 return
         
         updatable.update(dt)
+
+        #GAME OVER
+        for asteroid in asteroids:
+            if asteroid.collision(player) is True:
+                print("Game over!")
+                sys.exit()
 
         #pygame.Surface.fill(screen,(0,0,0))
         screen.fill("black")
