@@ -5,7 +5,7 @@ import pygame
 
 #Constant Variables
 from constants import *
-#Player Variables
+#Player and Shot Variables
 from player import *
 #Asteroid Variables
 from asteroid import *
@@ -22,7 +22,6 @@ def main():
     drawable = pygame.sprite.Group()
     
     asteroids = pygame.sprite.Group()
-    #AsteroidField = pygame.sprite.Group()
     
     shots = pygame.sprite.Group()
 
@@ -31,12 +30,8 @@ def main():
     AsteroidField.containers = (updatable)
     Shot.containers = (shots, updatable, drawable)
 
-
-    x = SCREEN_WIDTH / 2
-    y = SCREEN_HEIGHT / 2
     #how in Sam Hill does this work?
-    player = Player(x, y)
-
+    player = Player(SCREEN_WIDTH/2, SCREEN_HEIGHT/2)
     asteroidField = AsteroidField()
 
     dt = 0
@@ -53,11 +48,17 @@ def main():
         
         updatable.update(dt)
 
-        #GAME OVER
         for asteroid in asteroids:
+            #GAME OVER
             if asteroid.collision(player) is True:
                 print("Game over!")
                 sys.exit()
+            #DESTROY ASTEROID
+            for shot in shots:
+                if asteroid.collision(shot) is True:
+                    asteroid.split()
+                    shot.kill()
+
 
         #pygame.Surface.fill(screen,(0,0,0))
         screen.fill("black")
@@ -66,7 +67,6 @@ def main():
             i.draw(screen)
 
         pygame.display.flip()
-        
 
         dt = clock.tick(60) / 1000
 
